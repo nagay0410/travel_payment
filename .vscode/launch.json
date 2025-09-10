@@ -1,0 +1,29 @@
+{
+	"version": "0.2.0",
+	"configurations": [
+		{
+			"name": "API (dotnet run)",
+			"type": "coreclr",
+			"request": "launch",
+			"program": "dotnet",
+			"args": [
+				"run",
+				"--project",
+				"src/API/API.csproj",
+				"--urls",
+				"http://0.0.0.0:5000"
+			],
+			"cwd": "${workspaceFolder}",
+			"console": "integratedTerminal",
+			"stopAtEntry": false,
+			"env": {
+				"ASPNETCORE_ENVIRONMENT": "Development"
+			}
+		},
+		{
+			"name": "Attach to .NET Core",
+			"type": "coreclr",
+			"request": "attach"
+		}
+	]
+}
