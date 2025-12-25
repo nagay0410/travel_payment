@@ -12,436 +12,112 @@
 - **ORM**: Entity Framework Core 8.0
 - **API ドキュメント**: Swagger/OpenAPI 3.0
 
-## 2. API エンドポイント設計
+## 2. API 仕様
+
+各機能グループごとの主要なエンドポイント定義です。
 
 ### 2.1 認証・認可
+ユーザーの身元確認とアクセス権限の管理を行います。
 
-#### 2.1.1 ユーザー登録
-```
-POST /api/auth/register
-Content-Type: application/json
-
-Request Body:
-{
-  "username": "string",
-  "email": "string",
-  "password": "string",
-  "confirmPassword": "string"
-}
-
-Response:
-{
-  "success": true,
-  "message": "ユーザー登録が完了しました",
-  "data": {
-    "userId": "guid",
-    "username": "string",
-    "email": "string"
-  }
-}
-```
-
-#### 2.1.2 ユーザーログイン
-```
-POST /api/auth/login
-Content-Type: application/json
-
-Request Body:
-{
-  "email": "string",
-  "password": "string"
-}
-
-Response:
-{
-  "success": true,
-  "message": "ログインが完了しました",
-  "data": {
-    "token": "string",
-    "refreshToken": "string",
-    "expiresIn": "number",
-    "user": {
-      "userId": "guid",
-      "username": "string",
-      "email": "string"
-    }
-  }
-}
-```
-
-#### 2.1.3 トークン更新
-```
-POST /api/auth/refresh
-Authorization: Bearer {refreshToken}
-
-Response:
-{
-  "success": true,
-  "data": {
-    "token": "string",
-    "refreshToken": "string",
-    "expiresIn": "number"
-  }
-}
-```
+| 機能名 | パス | メソッド | 成功時 | 概要 |
+| :--- | :--- | :--- | :--- | :--- |
+| ユーザー登録 | `/api/auth/register` | POST | 201 | 新規ユーザーを作成します。 |
+| ログイン | `/api/auth/login` | POST | 200 | 認証を行い、アクセス用のトークンを発行します。 |
+| トークン更新 | `/api/auth/refresh` | POST | 200 | リフレッシュトークンを用いて新しいトークンを発行します。 |
 
 ### 2.2 旅行管理
+旅行の計画、メンバー、進捗を管理します。
 
-#### 2.2.1 旅行一覧取得
-```
-GET /api/trips
-Authorization: Bearer {token}
-Query Parameters:
-  - page: int (default: 1)
-  - pageSize: int (default: 10)
-  - status: string (optional: "Planning", "Active", "Completed")
-  - search: string (optional)
-
-Response:
-{
-  "success": true,
-  "data": {
-    "trips": [
-      {
-        "tripId": "guid",
-        "tripName": "string",
-        "description": "string",
-        "startDate": "date",
-        "endDate": "date",
-        "budget": "decimal",
-        "status": "string",
-        "memberCount": "int",
-        "totalPayments": "decimal",
-        "createdBy": "string",
-        "createdAt": "datetime"
-      }
-    ],
-    "pagination": {
-      "page": "int",
-      "pageSize": "int",
-      "totalCount": "int",
-      "totalPages": "int"
-    }
-  }
-}
-```
-
-#### 2.2.2 旅行詳細取得
-```
-GET /api/trips/{tripId}
-Authorization: Bearer {token}
-
-Response:
-{
-  "success": true,
-  "data": {
-    "tripId": "guid",
-    "tripName": "string",
-    "description": "string",
-    "startDate": "date",
-    "endDate": "date",
-    "budget": "decimal",
-    "status": "string",
-    "members": [
-      {
-        "userId": "guid",
-        "username": "string",
-        "role": "string",
-        "joinedAt": "datetime"
-      }
-    ],
-    "payments": [
-      {
-        "paymentId": "guid",
-        "amount": "decimal",
-        "description": "string",
-        "category": "string",
-        "paidBy": "string",
-        "paymentDate": "date"
-      }
-    ],
-    "settlements": [
-      {
-        "settlementId": "guid",
-        "fromUser": "string",
-        "toUser": "string",
-        "amount": "decimal",
-        "status": "string"
-      }
-    ]
-  }
-}
-```
-
-#### 2.2.3 旅行作成
-```
-POST /api/trips
-Authorization: Bearer {token}
-Content-Type: application/json
-
-Request Body:
-{
-  "tripName": "string",
-  "description": "string",
-  "startDate": "date",
-  "endDate": "date",
-  "budget": "decimal",
-  "memberEmails": ["string"]
-}
-
-Response:
-{
-  "success": true,
-  "message": "旅行が作成されました",
-  "data": {
-    "tripId": "guid",
-    "tripName": "string"
-  }
-}
-```
-
-#### 2.2.4 旅行更新
-```
-PUT /api/trips/{tripId}
-Authorization: Bearer {token}
-Content-Type: application/json
-
-Request Body:
-{
-  "tripName": "string",
-  "description": "string",
-  "startDate": "date",
-  "endDate": "date",
-  "budget": "decimal",
-  "status": "string"
-}
-
-Response:
-{
-  "success": true,
-  "message": "旅行情報が更新されました"
-}
-```
-
-#### 2.2.5 旅行削除
-```
-DELETE /api/trips/{tripId}
-Authorization: Bearer {token}
-
-Response:
-{
-  "success": true,
-  "message": "旅行が削除されました"
-}
-```
+| 機能名 | パス | メソッド | 成功時 | 概要 |
+| :--- | :--- | :--- | :--- | :--- |
+| 旅行一覧取得 | `/api/trips` | GET | 200 | 参加している旅行の一覧を検索条件に基づき取得します。 |
+| 旅行詳細取得 | `/api/trips/{id}` | GET | 200 | 旅行の基本情報、メンバー、支払い履歴、精算状況を取得します。 |
+| 旅行作成 | `/api/trips` | POST | 201 | 新しい旅行を作成し、指定されたメンバーを招待します。 |
+| 旅行更新 | `/api/trips/{id}` | PUT | 200 | 旅行名、期間、予算、ステータスを変更します。 |
+| 旅行削除 | `/api/trips/{id}` | DELETE | 204 | 旅行情報を削除します（管理者のみ）。 |
 
 ### 2.3 支払い管理
+旅行中の支出を記録・管理します。
 
-#### 2.3.1 支払い記録作成
-```
-POST /api/trips/{tripId}/payments
-Authorization: Bearer {token}
-Content-Type: multipart/form-data
-
-Form Data:
-  - amount: decimal
-  - description: string
-  - categoryId: guid
-  - paymentDate: date
-  - receiptImage: file (optional)
-
-Response:
-{
-  "success": true,
-  "message": "支払い記録が作成されました",
-  "data": {
-    "paymentId": "guid",
-    "amount": "decimal",
-    "description": "string"
-  }
-}
-```
-
-#### 2.3.2 支払い記録更新
-```
-PUT /api/payments/{paymentId}
-Authorization: Bearer {token}
-Content-Type: application/json
-
-Request Body:
-{
-  "amount": "decimal",
-  "description": "string",
-  "categoryId": "guid",
-  "paymentDate": "date"
-}
-
-Response:
-{
-  "success": true,
-  "message": "支払い記録が更新されました"
-}
-```
-
-#### 2.3.3 支払い記録削除
-```
-DELETE /api/payments/{paymentId}
-Authorization: Bearer {token}
-
-Response:
-{
-  "success": true,
-  "message": "支払い記録が削除されました"
-}
-```
+| 機能名 | パス | メソッド | 成功時 | 概要 |
+| :--- | :--- | :--- | :--- | :--- |
+| 支払い記録作成 | `/api/trips/{id}/payments` | POST | 201 | 旅行に紐づく新しい支払い（金額、カテゴリ、画像等）を記録します。 |
+| 支払い記録更新 | `/api/payments/{id}` | PUT | 200 | 記録済みの支払い情報を修正します。 |
+| 支払い記録削除 | `/api/payments/{id}` | DELETE | 204 | 支払い記録を削除します。 |
+| 支払い一覧取得 | `/api/trips/{id}/payments` | GET | 200 | 旅行内の支払い履歴をフィルタリングして取得します。 |
 
 ### 2.4 精算管理
+支払いデータに基づく個人間の貸し借りを解消します。
 
-#### 2.4.1 精算計算
-```
-GET /api/trips/{tripId}/settlements/calculate
-Authorization: Bearer {token}
-
-Response:
-{
-  "success": true,
-  "data": {
-    "totalAmount": "decimal",
-    "perPersonAmount": "decimal",
-    "settlements": [
-      {
-        "fromUser": "string",
-        "toUser": "string",
-        "amount": "decimal"
-      }
-    ]
-  }
-}
-```
-
-#### 2.4.2 精算完了
-```
-POST /api/trips/{tripId}/settlements
-Authorization: Bearer {token}
-Content-Type: application/json
-
-Request Body:
-{
-  "fromUserId": "guid",
-  "toUserId": "guid",
-  "amount": "decimal",
-  "settlementMethod": "string"
-}
-
-Response:
-{
-  "success": true,
-  "message": "精算が完了しました",
-  "data": {
-    "settlementId": "guid"
-  }
-}
-```
+| 機能名 | パス | メソッド | 成功時 | 概要 |
+| :--- | :--- | :--- | :--- | :--- |
+| 精算計算 | `/api/trips/{id}/settlements/calculate` | GET | 200 | 現在の支払い状況から、誰が誰にいくら払うべきかを算出します。 |
+| 精算完了登録 | `/api/trips/{id}/settlements` | POST | 201 | 個人間の精算が完了したことを記録します。 |
 
 ### 2.5 カテゴリ管理
+支払いの分類項目を管理します。
 
-#### 2.5.1 カテゴリ一覧取得
-```
-GET /api/categories
-Authorization: Bearer {token}
+| 機能名 | パス | メソッド | 概要 |
+| :--- | :--- | :--- | :--- |
+| カテゴリ一覧取得 | `/api/categories` | GET | 利用可能な支払いカテゴリ（食費、交通費等）の一覧を取得します。 |
 
-Response:
-{
-  "success": true,
-  "data": [
-    {
-      "categoryId": "guid",
-      "categoryName": "string",
-      "description": "string",
-      "icon": "string"
-    }
-  ]
-}
-```
 
-## 3. エラーハンドリング
+## 3. 共通仕様
 
-### 3.1 エラーレスポンス形式
-```json
-{
-  "success": false,
-  "message": "エラーメッセージ",
-  "errors": [
-    {
-      "field": "string",
-      "message": "string"
-    }
-  ],
-  "statusCode": "number"
-}
-```
+### 3.1 レスポンス形式
+すべての API は一貫した構造でレスポンスを返却します。
+
+| 項目 | 型 | 説明 |
+| :--- | :--- | :--- |
+| success | boolean | 処理の成否を示すフラグ。 |
+| message | string | ユーザー向けの通知メッセージ。 |
+| data | object/array | 処理結果の主要データ。 |
+| errors | array | バリデーションエラーや詳細メッセージのリスト（失敗時）。 |
+| statusCode | number | HTTP ステータスコード。 |
 
 ### 3.2 HTTP ステータスコード
-- 200: OK
-- 201: Created
-- 400: Bad Request
-- 401: Unauthorized
-- 403: Forbidden
-- 404: Not Found
-- 422: Unprocessable Entity
-- 500: Internal Server Error
+API は標準的な HTTP ステータスコード (RFC 9110) を用いて状態を報告します。
+- **200 (OK)**: データの取得、更新、成功。
+- **201 (Created)**: リソースの新規作成成功。
+- **204 (No Content)**: 削除などの成功（レスポンスボディなし）。
+- **400 (Bad Request)**: リクエストパラメータの形式不備。
+- **401 (Unauthorized)**: トークンが無効または未送信。
+- **403 (Forbidden)**: 操作に必要な権限が不足。
+- **404 (Not Found)**: 該当するリソースが存在しない。
+- **422 (Unprocessable Entity)**: ビジネスルールや整合性のバリデーションエラー。
+- **429 (Too Many Requests)**: レート制限によるリクエスト拒否 (RFC 6585)。
+- **500 (Internal Server Error)**: サーバー内部の予期しないエラー。
 
-### 3.3 バリデーションエラー
-```json
-{
-  "success": false,
-  "message": "バリデーションエラーが発生しました",
-  "errors": [
-    {
-      "field": "email",
-      "message": "メールアドレスの形式が正しくありません"
-    },
-    {
-      "field": "password",
-      "message": "パスワードは8文字以上である必要があります"
-    }
-  ],
-  "statusCode": 422
-}
-```
 
 ## 4. 認証・認可
 
-### 4.1 JWT トークン
-- **アクセストークン**: 有効期限 1時間
-- **リフレッシュトークン**: 有効期限 7日
-- **アルゴリズム**: HS256
+### 4.1 セキュリティ方式
+- **方式**: HTTP `Authorization` ヘッダーを用いた JWT 認証を採用します。
+- **スキーム**: RFC 6750 に従い、`Bearer` 認証スキームを使用します。
+    - 例: `Authorization: Bearer <access_token>`
+- **トークン構成**:
+    - アクセストークン（短寿命）: 毎リクエストの認可に使用。
+    - リフレッシュトークン（長寿命）: アクセストークンの再発行に使用。
 
-### 4.2 認可レベル
-- **旅行管理者**: 旅行の編集・削除、メンバー管理
-- **一般参加者**: 支払い記録の作成・編集・削除
-- **閲覧者**: 旅行情報の閲覧のみ
+### 4.2 アクセス権限ルール
+旅行情報の操作は、旅行参加時のロールに基づいて制限されます。
 
-## 5. レート制限
+- **管理者**: 旅行設定の変更、メンバー招待・削除、全データの操作が可能。
+- **メンバー**: 自身の支払い記録の追加・編集、情報閲覧が可能。
+- **閲覧者**: 旅行に関連するすべての情報の閲覧のみ可能。
 
-### 5.1 制限設定
-- **認証エンドポイント**: 5回/分
-- **一般API**: 100回/分
-- **ファイルアップロード**: 10回/分
+## 5. 運用設計
 
-## 6. ログ・監視
+### 5.1 レート制限
+過剰なアクセスからシステムを保護するため、クライアント単位（IPまたはユーザー）で制限を設けます。
+- **重要操作（ログイン等）**: 短時間に繰り返しの試行が不可能な低めの閾値を設定します。
+- **一般API**: 通常の利用を妨げない範囲で、分間あたりのリクエスト数を制限します。
 
-### 6.1 ログ出力
-- リクエスト・レスポンスログ
-- エラーログ
-- 認証ログ
-- パフォーマンスログ
-
-### 6.2 監視項目
-- API レスポンス時間
-- エラー率
-- 同時接続数
-- データベース接続状況
+### 5.2 ログ・監視
+問題の追跡とパフォーマンス管理のため、以下の情報を記録します。
+- **API ログ**: アクセス日時、エンドポイント、処理時間、ステータスコード。
+- **エラーログ**: 発生した例外のスタックトレースと発生コンテキスト。
+- **監査ログ**: データの変更や権限の変更といった重要なセキュリティイベント。
 
 ---
 
