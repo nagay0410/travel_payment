@@ -53,6 +53,13 @@ public class Payment : Entity
     /// </summary>
     public DateTimeOffset UpdatedAt { get; private set; }
 
+    private readonly List<PaymentParticipant> _participants = new();
+
+    /// <summary>
+    /// 特定の支払いにおける精算対象者の一覧（読み取り専用）。
+    /// </summary>
+    public IReadOnlyCollection<PaymentParticipant> Participants => _participants.AsReadOnly();
+
     private Payment(Guid id, Guid tripId, Guid userId, Guid categoryId, Money amount, string? description, DateTime paymentDate, string? receiptImage) : base(id)
     {
         TripId = tripId;
@@ -72,17 +79,21 @@ public class Payment : Entity
     /// <summary>
     /// 新しい支払い記録を作成します。
     /// </summary>
-    /// <param name="id">支払いID</param>
-    /// <param name="tripId">旅行ID</param>
-    /// <param name="userId">支払者ユーザーID</param>
-    /// <param name="categoryId">カテゴリID</param>
-    /// <param name="amount">金額（Money値オブジェクト）</param>
-    /// <param name="description">説明（任意）</param>
-    /// <param name="paymentDate">支払日</param>
-    /// <param name="receiptImage">領収書画像（任意）</param>
-    /// <returns>Paymentインスタンス</returns>
     public static Payment Create(Guid id, Guid tripId, Guid userId, Guid categoryId, Money amount, string? description, DateTime paymentDate, string? receiptImage = null)
     {
         return new Payment(id, tripId, userId, categoryId, amount, description, paymentDate, receiptImage);
+    }
+
+    /// <summary>
+    /// 支払い記録に精算対象者を追加します。
+    /// </summary>
+    /// <param name="userId">対象ユーザーのID</param>
+    public void AddParticipant(Guid userId)
+    {
+        if (_participants.Any(p => p.UserId == userId))
+            return;
+
+        _participants.Add(PaymentParticipant.Create(Guid.NewGuid(), Id, userId));
+        UpdatedAt = DateTimeOffset.UtcNow;
     }
 }

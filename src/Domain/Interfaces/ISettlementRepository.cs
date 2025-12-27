@@ -18,6 +18,11 @@ public interface ISettlementRepository
     Task<IReadOnlyList<Settlement>> GetByTripIdAsync(Guid tripId, CancellationToken cancellationToken = default);
 
     /// <summary>
+    /// 精算データを追加します。
+    /// </summary>
+    Task AddAsync(Settlement settlement, CancellationToken cancellationToken = default);
+
+    /// <summary>
     /// 一括で精算データを追加します。
     /// </summary>
     Task AddRangeAsync(IEnumerable<Settlement> settlements, CancellationToken cancellationToken = default);
