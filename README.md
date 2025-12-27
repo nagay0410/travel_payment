@@ -101,8 +101,7 @@ dotnet test
 
 ## API ドキュメント
 起動後、以下のURLでSwagger UIにアクセスできます：
-- http://localhost:5000/swagger
-- https://localhost:5001/swagger
+- https://nagay0410.github.io/travel_payment/swagger/
 
 ## 設計書
 詳細な設計書は `docs/` フォルダに格納されています：
