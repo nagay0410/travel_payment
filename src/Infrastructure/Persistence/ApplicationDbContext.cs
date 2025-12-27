@@ -18,6 +18,7 @@ public class ApplicationDbContext : DbContext
     public DbSet<TripMember> TripMembers => Set<TripMember>();
     public DbSet<Category> Categories => Set<Category>();
     public DbSet<Payment> Payments => Set<Payment>();
+    public DbSet<PaymentParticipant> PaymentParticipants => Set<PaymentParticipant>();
     public DbSet<Settlement> Settlements => Set<Settlement>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

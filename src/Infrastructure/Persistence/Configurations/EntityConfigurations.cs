@@ -103,5 +103,32 @@ public class PaymentConfiguration : IEntityTypeConfiguration<Payment>
             a.Property(m => m.Amount).HasColumnName("amount");
             a.Property(m => m.Currency).HasColumnName("currency").HasMaxLength(3);
         });
+
+        builder.HasMany(p => p.Participants)
+            .WithOne()
+            .HasForeignKey(p => p.PaymentId)
+            .OnDelete(DeleteBehavior.Cascade);
+    }
+}
+
+public class PaymentParticipantConfiguration : IEntityTypeConfiguration<PaymentParticipant>
+{
+    public void Configure(EntityTypeBuilder<PaymentParticipant> builder)
+    {
+        builder.ToTable("payment_participants");
+
+        builder.HasKey(x => x.Id);
+
+        builder.Property(x => x.Id)
+            .HasColumnName("payment_participant_id")
+            .ValueGeneratedNever();
+
+        builder.Property(x => x.PaymentId)
+            .HasColumnName("payment_id")
+            .IsRequired();
+
+        builder.Property(x => x.UserId)
+            .HasColumnName("user_id")
+            .IsRequired();
     }
 }
