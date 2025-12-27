@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -6,8 +6,8 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [CommonModule],
   template: `
-    <span class="badge" [ngClass]="status">
-      {{ status }}
+    <span class="badge" [ngClass]="status()">
+      {{ status() }}
     </span>
   `,
   styles: [`
@@ -26,5 +26,5 @@ import { CommonModule } from '@angular/common';
   `]
 })
 export class StatusBadgeComponent {
-  @Input() status: string = '';
+  status = input<string>('');
 }

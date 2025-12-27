@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, input, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -6,8 +6,8 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [CommonModule],
   template: `
-    <div class="avatar" [style.background-color]="color" [title]="name">
-      {{ initials }}
+    <div class="avatar" [style.background-color]="color()" [title]="name()">
+      {{ initials() }}
     </div>
   `,
   styles: [`
@@ -26,10 +26,11 @@ import { CommonModule } from '@angular/common';
   `]
 })
 export class MemberAvatarComponent {
-  @Input() name: string = '';
-  @Input() color: string = '#3f51b5';
+  name = input<string>('');
+  color = input<string>('#3f51b5');
 
-  get initials(): string {
-    return this.name ? this.name.charAt(0).toUpperCase() : '?';
-  }
+  initials = computed(() => {
+    const n = this.name();
+    return n ? n.charAt(0).toUpperCase() : '?';
+  });
 }

@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, input, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
@@ -13,13 +13,14 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
   styleUrl: './trip-card.component.css'
 })
 export class TripCardComponent {
-  @Input() title: string = '';
-  @Input() dateRange: string = '';
-  @Input() budget: number = 0;
-  @Input() spent: number = 0;
-  @Input() status: '計画中' | '実施中' | '完了' = '計画中';
+  title = input<string>('');
+  dateRange = input<string>('');
+  budget = input<number>(0);
+  spent = input<number>(0);
+  status = input<'計画中' | '実施中' | '完了'>('計画中');
 
-  get progress(): number {
-    return this.budget > 0 ? (this.spent / this.budget) * 100 : 0;
-  }
+  progress = computed(() => {
+    const b = this.budget();
+    return b > 0 ? (this.spent() / b) * 100 : 0;
+  });
 }
