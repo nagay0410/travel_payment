@@ -28,6 +28,12 @@ public class SettlementRepository : ISettlementRepository
             .ToListAsync(cancellationToken);
     }
 
+    public async Task AddAsync(Settlement settlement, CancellationToken cancellationToken = default)
+    {
+        await _context.Settlements.AddAsync(settlement, cancellationToken);
+        await _context.SaveChangesAsync(cancellationToken);
+    }
+
     public async Task AddRangeAsync(IEnumerable<Settlement> settlements, CancellationToken cancellationToken = default)
     {
         await _context.Settlements.AddRangeAsync(settlements, cancellationToken);
