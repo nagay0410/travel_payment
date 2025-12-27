@@ -61,7 +61,7 @@
 ### 3.1 バックエンド（C#）
 - **フレームワーク**: ASP.NET Core Web API
 - **ORM**: Entity Framework Core
-- **データベース**: SQL Server または PostgreSQL
+- **データベース**: Azure Database for PostgreSQL
 - **認証**: JWT（JSON Web Token）
 - **API ドキュメント**: Swagger/OpenAPI
 - **ログ**: Serilog
@@ -79,8 +79,8 @@
 ### 3.3 インフラ・運用
 - **コンテナ**: Docker
 - **CI/CD**: GitHub Actions
-- **ホスティング**: Azure App Service または AWS
-- **データベース**: Azure SQL Database または AWS RDS
+- **ホスティング**: Azure App Service
+- **データベース**: Azure Database for PostgreSQL
 
 ## 4. データベース設計
 
