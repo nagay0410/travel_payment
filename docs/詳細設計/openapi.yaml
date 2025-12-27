@@ -1,0 +1,339 @@
+openapi: 3.0.3
+info:
+  title: 旅行支払い精算アプリ API
+  description: 旅行支払い精算アプリのバックエンドAPI詳細定義。
+  version: 1.0.0
+servers:
+  - url: /api
+components:
+  schemas:
+    CommonResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+        data:
+          type: object
+          nullable: true
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+        statusCode:
+          type: integer
+    ErrorDetail:
+      type: object
+      properties:
+        field:
+          type: string
+        message:
+          type: string
+    
+    # Auth DTOs
+    RegisterDto:
+      type: object
+      required: [userName, email, password]
+      properties:
+        userName:
+          type: string
+          minLength: 3
+          maxLength: 50
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          minLength: 8
+    LoginDto:
+      type: object
+      required: [email, password]
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+    AuthResponse:
+      type: object
+      properties:
+        accessToken:
+          type: string
+        refreshToken:
+          type: string
+        expiresIn:
+          type: integer
+          description: 有効期限(秒)
+
+    # Trip DTOs
+    TripSummaryDto:
+      type: object
+      properties:
+        tripId:
+          type: string
+          format: uuid
+        tripName:
+          type: string
+        startDate:
+          type: string
+          format: date-time
+        endDate:
+          type: string
+          format: date-time
+        status:
+          type: string
+        memberCount:
+          type: integer
+    CreateTripDto:
+      type: object
+      required: [tripName, startDate, endDate]
+      properties:
+        tripName:
+          type: string
+          maxLength: 100
+        description:
+          type: string
+          maxLength: 500
+        startDate:
+          type: string
+          format: date-time
+        endDate:
+          type: string
+          format: date-time
+        budget:
+          type: number
+          format: decimal
+        invitedUserEmails:
+          type: array
+          items:
+            type: string
+            format: email
+
+    # Payment DTOs
+    CreatePaymentDto:
+      type: object
+      required: [categoryId, amount, paymentDate]
+      properties:
+        categoryId:
+          type: string
+          format: uuid
+        amount:
+          type: number
+          format: decimal
+          minimum: 0.01
+        description:
+          type: string
+          maxLength: 200
+        paymentDate:
+          type: string
+          format: date-time
+        currency:
+          type: string
+          default: JPY
+
+    # Settlement DTOs
+    SettlementDto:
+      type: object
+      properties:
+        fromUserId:
+          type: string
+          format: uuid
+        fromUserName:
+          type: string
+        toUserId:
+          type: string
+          format: uuid
+        toUserName:
+          type: string
+        amount:
+          type: number
+          format: decimal
+    CompleteSettlementDto:
+      type: object
+      required: [fromUserId, toUserId, amount]
+      properties:
+        fromUserId:
+          type: string
+          format: uuid
+        toUserId:
+          type: string
+          format: uuid
+        amount:
+          type: number
+          format: decimal
+        method:
+          type: string
+
+paths:
+  /auth/register:
+    post:
+      tags: [Auth]
+      summary: ユーザー登録
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterDto'
+      responses:
+        '201':
+          description: 登録成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  userId:
+                    type: string
+                    format: uuid
+  /auth/login:
+    post:
+      tags: [Auth]
+      summary: ログイン
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginDto'
+      responses:
+        '200':
+          description: ログイン成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+
+  /trips:
+    get:
+      tags: [Trips]
+      summary: 旅行一覧取得
+      parameters:
+        - name: status
+          in: query
+          schema:
+            type: string
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: pageSize
+          in: query
+          schema:
+            type: integer
+            default: 10
+      responses:
+        '200':
+          description: 取得成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/TripSummaryDto'
+                  totalCount:
+                    type: integer
+    post:
+      tags: [Trips]
+      summary: 旅行作成
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTripDto'
+      responses:
+        '201':
+          description: 作成成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  tripId:
+                    type: string
+                    format: uuid
+
+  /trips/{tripId}/payments:
+    post:
+      tags: [Payments]
+      summary: 支払い記録作成
+      parameters:
+        - name: tripId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreatePaymentDto'
+      responses:
+        '201':
+          description: 作成成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  paymentId:
+                    type: string
+                    format: uuid
+
+  /trips/{tripId}/settlements/calculate:
+    get:
+      tags: [Settlements]
+      summary: 精算計算
+      parameters:
+        - name: tripId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: 計算成功
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SettlementDto'
+
+  /trips/{tripId}/settlements:
+    post:
+      tags: [Settlements]
+      summary: 精算完了登録
+      parameters:
+        - name: tripId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CompleteSettlementDto'
+      responses:
+        '201':
+          description: 登録成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  settlementId:
+                    type: string
+                    format: uuid
