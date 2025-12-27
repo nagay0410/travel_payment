@@ -1,1 +1,28 @@
-<p>trip-card works!</p>
+<mat-card class="trip-card">
+  <mat-card-header>
+    <div mat-card-avatar class="trip-icon">
+      <mat-icon>flight_takeoff</mat-icon>
+    </div>
+    <mat-card-title>{{ title }}</mat-card-title>
+    <mat-card-subtitle>{{ dateRange }}</mat-card-subtitle>
+  </mat-card-header>
+  
+  <mat-card-content>
+    <div class="status-badge" [ngClass]="status">
+      {{ status }}
+    </div>
+    <div class="budget-section">
+      <div class="budget-label">
+        <span>予算進捗</span>
+        <span>{{ spent | currency:'JPY' }} / {{ budget | currency:'JPY' }}</span>
+      </div>
+      <mat-progress-bar mode="determinate" [value]="progress" 
+        [color]="progress > 90 ? 'warn' : 'primary'">
+      </mat-progress-bar>
+    </div>
+  </mat-card-content>
+
+  <mat-card-actions align="end">
+    <button mat-button color="primary">詳細を表示</button>
+  </mat-card-actions>
+</mat-card>

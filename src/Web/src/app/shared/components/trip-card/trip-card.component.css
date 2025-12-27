@@ -1,0 +1,45 @@
+.trip-card {
+  margin-bottom: 16px;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: white;
+}
+
+.trip-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--mat-primary-500);
+  color: white;
+  border-radius: 50%;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 16px;
+  font-size: 12px;
+  margin: 8px 0;
+  font-weight: bold;
+}
+
+.status-badge.計画中 { background: #64b5f6; color: #0d47a1; }
+.status-badge.実施中 { background: #81c784; color: #1b5e20; }
+.status-badge.完了 { background: #e0e0e0; color: #424242; }
+
+.budget-section {
+  margin-top: 16px;
+}
+
+.budget-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  margin-bottom: 4px;
+}
+
+mat-progress-bar {
+  height: 8px;
+  border-radius: 4px;
+}
