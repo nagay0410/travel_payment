@@ -4,11 +4,13 @@ import { LoginComponent } from './features/auth/login/login.component';
 import { RegisterComponent } from './features/auth/register/register.component';
 import { TripCreateComponent } from './features/trips/trip-create/trip-create.component';
 import { TripDashboardComponent } from './features/trips/trip-dashboard/trip-dashboard.component';
+import { PaymentFormComponent } from './features/payments/payment-form/payment-form.component';
 
 export const routes: Routes = [
   { path: 'trips', component: TripListComponent },
   { path: 'trips/create', component: TripCreateComponent },
   { path: 'trips/:id', component: TripDashboardComponent },
+  { path: 'trips/:id/payments/create', component: PaymentFormComponent },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
   { path: '', redirectTo: '/trips', pathMatch: 'full' }

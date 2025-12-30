@@ -5,6 +5,7 @@ import { TripService } from '../../../core/services/trip.service';
 import { TripHeaderComponent } from './components/trip-header/trip-header.component';
 import { MemberSidebarComponent } from './components/member-sidebar/member-sidebar.component';
 import { ExpenseSummaryComponent } from './components/expense-summary/expense-summary.component';
+import { PaymentListComponent } from '../../payments/payment-list/payment-list.component';
 
 @Component({
   selector: 'app-trip-dashboard',
@@ -13,7 +14,8 @@ import { ExpenseSummaryComponent } from './components/expense-summary/expense-su
     CommonModule,
     TripHeaderComponent,
     MemberSidebarComponent,
-    ExpenseSummaryComponent
+    ExpenseSummaryComponent,
+    PaymentListComponent
   ],
   template: `
     <div class="dashboard-container" *ngIf="tripService.currentTrip() as trip">
@@ -22,7 +24,7 @@ import { ExpenseSummaryComponent } from './components/expense-summary/expense-su
       <div class="dashboard-content">
         <div class="main-column">
           <app-expense-summary [tripId]="trip.id"></app-expense-summary>
-          <!-- 今後、ここに支払い履歴などを追加予定 -->
+          <app-payment-list [tripId]="trip.id"></app-payment-list>
         </div>
         
         <aside class="side-column">
