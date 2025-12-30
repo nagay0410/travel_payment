@@ -22,7 +22,8 @@ public record CreatePaymentCommand(
     decimal Amount,
     string Currency,
     DateTime PaymentDate,
-    IEnumerable<Guid> ParticipantIds) : IRequest<Guid>;
+    IEnumerable<Guid> ParticipantIds,
+    string? ReceiptImage = null) : IRequest<Guid>;
 
 /// <summary>
 /// <see cref="CreatePaymentCommand"/> を処理するハンドラー。
@@ -64,7 +65,8 @@ public class CreatePaymentCommandHandler : IRequestHandler<CreatePaymentCommand,
             categoryId,
             amount,
             request.Title,
-            request.PaymentDate);
+            request.PaymentDate,
+            request.ReceiptImage);
 
         // 精算対象者の追加
         foreach (var participantId in request.ParticipantIds)

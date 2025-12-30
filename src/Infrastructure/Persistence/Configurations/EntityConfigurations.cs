@@ -132,3 +132,55 @@ public class PaymentParticipantConfiguration : IEntityTypeConfiguration<PaymentP
             .IsRequired();
     }
 }
+
+public class TripMemberConfiguration : IEntityTypeConfiguration<TripMember>
+{
+    public void Configure(EntityTypeBuilder<TripMember> builder)
+    {
+        builder.ToTable("trip_members");
+        builder.HasKey(x => x.Id);
+        builder.Property(x => x.Id).HasColumnName("trip_member_id").ValueGeneratedNever();
+        builder.Property(x => x.TripId).HasColumnName("trip_id").IsRequired();
+        builder.Property(x => x.UserId).HasColumnName("user_id").IsRequired();
+        builder.Property(x => x.Role).HasColumnName("role").IsRequired();
+        builder.Property(x => x.JoinedAt).HasColumnName("joined_at").IsRequired();
+        builder.Property(x => x.IsActive).HasColumnName("is_active").IsRequired();
+    }
+}
+
+public class CategoryConfiguration : IEntityTypeConfiguration<Category>
+{
+    public void Configure(EntityTypeBuilder<Category> builder)
+    {
+        builder.ToTable("categories");
+        builder.HasKey(x => x.Id);
+        builder.Property(x => x.Id).HasColumnName("category_id").ValueGeneratedNever();
+        builder.Property(x => x.CategoryName).HasColumnName("category_name").HasMaxLength(50).IsRequired();
+        builder.Property(x => x.Description).HasColumnName("description").HasMaxLength(200);
+        builder.Property(x => x.Icon).HasColumnName("icon").HasMaxLength(50);
+    }
+}
+
+public class SettlementConfiguration : IEntityTypeConfiguration<Settlement>
+{
+    public void Configure(EntityTypeBuilder<Settlement> builder)
+    {
+        builder.ToTable("settlements");
+        builder.HasKey(x => x.Id);
+        builder.Property(x => x.Id).HasColumnName("settlement_id").ValueGeneratedNever();
+        builder.Property(x => x.TripId).HasColumnName("trip_id").IsRequired();
+        builder.Property(x => x.FromUserId).HasColumnName("from_user_id").IsRequired();
+        builder.Property(x => x.ToUserId).HasColumnName("to_user_id").IsRequired();
+
+        builder.OwnsOne(s => s.Amount, a =>
+        {
+            a.Property(m => m.Amount).HasColumnName("amount");
+            a.Property(m => m.Currency).HasColumnName("currency").HasMaxLength(3);
+        });
+
+        builder.Property(x => x.SettlementMethod).HasColumnName("settlement_method").HasMaxLength(50);
+        builder.Property(x => x.IsCompleted).HasColumnName("is_completed").IsRequired();
+        builder.Property(x => x.CompletedAt).HasColumnName("completed_at");
+        builder.Property(x => x.CreatedAt).HasColumnName("created_at").IsRequired();
+    }
+}

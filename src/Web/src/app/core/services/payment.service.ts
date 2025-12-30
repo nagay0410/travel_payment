@@ -13,6 +13,7 @@ export interface Payment {
   categoryName: string;
   paymentDate: string;
   participantUserIds: string[];
+  receiptImage?: string;
 }
 
 @Injectable({

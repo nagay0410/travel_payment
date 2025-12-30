@@ -28,5 +28,8 @@ public class CreatePaymentCommandValidator : AbstractValidator<CreatePaymentComm
 
         RuleFor(v => v.ParticipantIds)
             .NotEmpty().WithMessage("精算対象者は1人以上指定してください。");
+
+        RuleFor(v => v.ReceiptImage)
+            .MaximumLength(3000000).WithMessage("領収書画像が大きすぎます（最大 2MB 程度）。");
     }
 }
