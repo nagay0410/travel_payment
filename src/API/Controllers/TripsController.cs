@@ -4,6 +4,7 @@ using Application.Trips.Commands.CreateTrip;
 using Application.Trips.Queries;
 using Application.Trips.Queries.GetTripById;
 using Application.Trips.Queries.GetTripsByUserId;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers;
