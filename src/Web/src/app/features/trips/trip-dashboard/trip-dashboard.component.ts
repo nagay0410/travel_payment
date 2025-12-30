@@ -1,3 +1,10 @@
+import { Component, OnInit, signal } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ActivatedRoute } from '@angular/router';
+import { TripService } from '../../../core/services/trip.service';
+import { TripHeaderComponent } from './components/trip-header/trip-header.component';
+import { MemberSidebarComponent } from './components/member-sidebar/member-sidebar.component';
+import { ExpenseSummaryComponent } from './components/expense-summary/expense-summary.component';
 import { PaymentListComponent } from '../../payments/payment-list/payment-list.component';
 import { SettlementListComponent } from '../../settlements/settlement-list/settlement-list.component';
 
