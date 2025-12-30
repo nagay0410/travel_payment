@@ -10,6 +10,7 @@ export interface Trip {
   budget: number;
   totalSpent: number;
   status: '計画中' | '実施中' | '完了';
+  members?: { id: string, name: string, role: string }[];
 }
 
 @Injectable({
@@ -23,6 +24,13 @@ export class TripService {
   currentTrip = signal<Trip | null>(null);
 
   constructor(private http: HttpClient) {}
+
+  /**
+   * 旅行にメンバーを追加
+   */
+  addMember(tripId: string, userId: string): Observable<any> {
+    return this.http.post<any>(`${this.API_URL}/${tripId}/members`, { tripId, userId });
+  }
 
   /**
    * 参加している旅行一覧を取得
