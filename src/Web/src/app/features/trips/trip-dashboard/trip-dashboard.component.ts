@@ -1,11 +1,5 @@
-import { Component, OnInit, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
-import { TripService } from '../../../core/services/trip.service';
-import { TripHeaderComponent } from './components/trip-header/trip-header.component';
-import { MemberSidebarComponent } from './components/member-sidebar/member-sidebar.component';
-import { ExpenseSummaryComponent } from './components/expense-summary/expense-summary.component';
 import { PaymentListComponent } from '../../payments/payment-list/payment-list.component';
+import { SettlementListComponent } from '../../settlements/settlement-list/settlement-list.component';
 
 @Component({
   selector: 'app-trip-dashboard',
@@ -15,7 +9,8 @@ import { PaymentListComponent } from '../../payments/payment-list/payment-list.c
     TripHeaderComponent,
     MemberSidebarComponent,
     ExpenseSummaryComponent,
-    PaymentListComponent
+    PaymentListComponent,
+    SettlementListComponent
   ],
   template: `
     <div class="dashboard-container" *ngIf="tripService.currentTrip() as trip">
@@ -24,6 +19,7 @@ import { PaymentListComponent } from '../../payments/payment-list/payment-list.c
       <div class="dashboard-content">
         <div class="main-column">
           <app-expense-summary [tripId]="trip.id"></app-expense-summary>
+          <app-settlement-list [tripId]="trip.id"></app-settlement-list>
           <app-payment-list [tripId]="trip.id"></app-payment-list>
         </div>
         
