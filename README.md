@@ -15,12 +15,11 @@
 ### バックエンド
 - **フレームワーク**: ASP.NET Core 8.0
 - **ORM**: Entity Framework Core 8.0
-- **データベース**: SQL Server / PostgreSQL
-- **認証**: JWT (JSON Web Token)
+- **データベース**: PostgreSQL (推奨) / SQL Server
 - **アーキテクチャ**: クリーンアーキテクチャ
 
 ### フロントエンド
-- **フレームワーク**: Angular 17+
+- **フレームワーク**: Angular 19+
 - **UI ライブラリ**: Angular Material
 - **状態管理**: RxJS
 
@@ -61,8 +60,8 @@ TravelPayment/
 
 ### 前提条件
 - .NET 8.0 SDK
-- SQL Server または PostgreSQL
-- Node.js 18+ (フロントエンド開発用)
+- PostgreSQL
+- Node.js 20+
 
 ### バックエンドの起動
 ```bash
@@ -86,17 +85,22 @@ npm install
 npm start
 ```
 
+### 詳細手順
+[環境構築手順](docs/環境構築/環境構築.md) を参照してください。
+
 ## テスト実行
 
-### 全テスト実行
+### ユニットテスト (バックエンド)
 ```bash
 dotnet test
 ```
 
-### 特定プロジェクトのテスト実行
+### E2E テスト (Playwright)
 ```bash
-cd tests/Domain
-dotnet test
+cd tests/E2eTests
+npm install
+npx playwright install
+npx playwright test
 ```
 
 ## API ドキュメント
@@ -140,7 +144,4 @@ dotnet test
 5. プルリクエストを作成
 
 ## ライセンス
-このプロジェクトはMITライセンスの下で公開されています。詳細は [LICENSE](LICENSE) ファイルを参照してください。
-
-## 連絡先
-プロジェクトに関する質問や提案がある場合は、Issueを作成してください。
+このプロジェクトはMITライセンスの下で公開されています。
