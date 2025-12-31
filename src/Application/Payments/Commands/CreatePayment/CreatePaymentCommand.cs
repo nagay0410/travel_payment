@@ -59,7 +59,6 @@ public class CreatePaymentCommandHandler : IRequestHandler<CreatePaymentCommand,
         var categoryId = Guid.Empty; // TODO: カテゴリ管理機能実装後に修正
 
         var payment = Payment.Create(
-            Guid.NewGuid(),
             request.TripId,
             request.PayerId,
             categoryId,

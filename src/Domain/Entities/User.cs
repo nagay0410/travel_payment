@@ -43,7 +43,7 @@ public class User : AggregateRoot
     /// </summary>
     public DateTimeOffset UpdatedAt { get; private set; }
 
-    private User(Guid id, string userName, Email email, string passwordHash) : base(id)
+    private User(string userName, Email email, string passwordHash) : base()
     {
         UserName = userName;
         Email = email;
@@ -59,13 +59,12 @@ public class User : AggregateRoot
     /// <summary>
     /// 新しいユーザーを作成します。
     /// </summary>
-    /// <param name="id">ユーザーID</param>
     /// <param name="userName">ユーザー名</param>
     /// <param name="email">メールアドレス（Email値オブジェクト）</param>
     /// <param name="passwordHash">パスワードハッシュ</param>
     /// <returns>Userインスタンス</returns>
     /// <exception cref="ArgumentException">入力値が不正な場合</exception>
-    public static User Create(Guid id, string userName, Email email, string passwordHash)
+    public static User Create(string userName, Email email, string passwordHash)
     {
         if (string.IsNullOrWhiteSpace(userName))
             throw new ArgumentException("ユーザー名は必須です。", nameof(userName));
@@ -73,7 +72,7 @@ public class User : AggregateRoot
         if (string.IsNullOrWhiteSpace(passwordHash))
             throw new ArgumentException("パスワードハッシュは必須です。", nameof(passwordHash));
 
-        return new User(id, userName, email, passwordHash);
+        return new User(userName, email, passwordHash);
     }
 
     /// <summary>

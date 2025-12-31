@@ -1,6 +1,7 @@
 using Application.Common.Mappings;
 using Application.Payments.Commands.CreatePayment;
 using Domain.Entities;
+using Domain.Common;
 using Domain.Interfaces;
 using Domain.ValueObjects;
 using FluentAssertions;
@@ -28,15 +29,20 @@ public class CreatePaymentTests
         // Arrange
         var tripId = Guid.NewGuid();
         var payerId = Guid.NewGuid();
-        var trip = Trip.Create(tripId, "test trip", DateTime.Today, DateTime.Today.AddDays(1), Guid.NewGuid());
+        var trip = Trip.Create("test trip", DateTime.Today, DateTime.Today.AddDays(1), Guid.NewGuid());
+        typeof(Entity).GetProperty("Id")!.SetValue(trip, tripId);
+
         // メンバーとして追加しておく必要がある
-        trip.AddMember(TripMember.Create(Guid.NewGuid(), tripId, payerId, "Member"));
+        trip.AddMember(TripMember.Create(tripId, payerId, "Member"));
 
         _tripRepositoryMock.Setup(x => x.GetByIdAsync(tripId, It.IsAny<CancellationToken>()))
             .ReturnsAsync(trip);
 
         var command = new CreatePaymentCommand(tripId, payerId, "Lunch", 5000, "JPY", DateTime.Now, new List<Guid> { payerId });
         var handler = new CreatePaymentCommandHandler(_paymentRepositoryMock.Object, _tripRepositoryMock.Object);
+
+        _paymentRepositoryMock.Setup(x => x.AddAsync(It.IsAny<Payment>(), It.IsAny<CancellationToken>()))
+            .Callback<Payment, CancellationToken>((p, c) => typeof(Entity).GetProperty("Id")!.SetValue(p, Guid.NewGuid()));
 
         // Act
         var result = await handler.Handle(command, CancellationToken.None);

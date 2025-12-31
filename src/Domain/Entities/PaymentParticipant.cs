@@ -17,7 +17,7 @@ public class PaymentParticipant : Entity
     /// </summary>
     public Guid UserId { get; private set; }
 
-    private PaymentParticipant(Guid id, Guid paymentId, Guid userId) : base(id)
+    private PaymentParticipant(Guid paymentId, Guid userId) : base()
     {
         PaymentId = paymentId;
         UserId = userId;
@@ -33,8 +33,8 @@ public class PaymentParticipant : Entity
     /// <param name="paymentId">支払いID</param>
     /// <param name="userId">ユーザーID</param>
     /// <returns>PaymentParticipantインスタンス</returns>
-    public static PaymentParticipant Create(Guid id, Guid paymentId, Guid userId)
+    public static PaymentParticipant Create(Guid paymentId, Guid userId)
     {
-        return new PaymentParticipant(id, paymentId, userId);
+        return new PaymentParticipant(paymentId, userId);
     }
 }

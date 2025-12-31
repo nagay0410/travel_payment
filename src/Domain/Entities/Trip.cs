@@ -61,7 +61,7 @@ public class Trip : AggregateRoot
     /// </summary>
     public IReadOnlyCollection<TripMember> Members => _members.AsReadOnly();
 
-    private Trip(Guid id, string tripName, DateTime startDate, DateTime endDate, Guid createdBy, string? description, Money? budget) : base(id)
+    private Trip(string tripName, DateTime startDate, DateTime endDate, Guid createdBy, string? description, Money? budget) : base()
     {
         TripName = tripName;
         StartDate = startDate;
@@ -80,7 +80,6 @@ public class Trip : AggregateRoot
     /// <summary>
     /// 新しい旅行プロジェクトを作成します。
     /// </summary>
-    /// <param name="id">旅行ID</param>
     /// <param name="tripName">旅行名</param>
     /// <param name="startDate">開始日</param>
     /// <param name="endDate">終了日</param>
@@ -89,7 +88,7 @@ public class Trip : AggregateRoot
     /// <param name="budget">予算（任意）</param>
     /// <returns>Tripインスタンス</returns>
     /// <exception cref="ArgumentException">日付の前後関係が不正な場合など</exception>
-    public static Trip Create(Guid id, string tripName, DateTime startDate, DateTime endDate, Guid createdBy, string? description = null, Money? budget = null)
+    public static Trip Create(string tripName, DateTime startDate, DateTime endDate, Guid createdBy, string? description = null, Money? budget = null)
     {
         if (string.IsNullOrWhiteSpace(tripName))
             throw new ArgumentException("旅行名は必須です。", nameof(tripName));
@@ -97,7 +96,7 @@ public class Trip : AggregateRoot
         if (endDate < startDate)
             throw new ArgumentException("終了日は開始日以降である必要があります。", nameof(endDate));
 
-        return new Trip(id, tripName, startDate, endDate, createdBy, description, budget);
+        return new Trip(tripName, startDate, endDate, createdBy, description, budget);
     }
 
     /// <summary>

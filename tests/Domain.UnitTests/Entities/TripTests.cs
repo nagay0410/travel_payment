@@ -15,10 +15,10 @@ public class TripTests
         var createdBy = Guid.NewGuid();
 
         // Act
-        var trip = Trip.Create(tripId, tripName, startDate, endDate, createdBy);
+        var trip = Trip.Create(tripName, startDate, endDate, createdBy);
 
         // Assert
-        Assert.Equal(tripId, trip.Id);
+        Assert.Equal(Guid.Empty, trip.Id);
         Assert.Equal(tripName, trip.TripName);
         Assert.Equal(startDate, trip.StartDate);
         Assert.Equal(endDate, trip.EndDate);
@@ -37,14 +37,14 @@ public class TripTests
         var createdBy = Guid.NewGuid();
 
         // Act & Assert
-        Assert.Throws<ArgumentException>(() => Trip.Create(tripId, tripName, startDate, endDate, createdBy));
+        Assert.Throws<ArgumentException>(() => Trip.Create(tripName, startDate, endDate, createdBy));
     }
 
     [Fact]
     public void UpdateStatus_WithValidStatus_ShouldChangeStatus()
     {
         // Arrange
-        var trip = Trip.Create(Guid.NewGuid(), "Test", DateTime.Today, DateTime.Today.AddDays(1), Guid.NewGuid());
+        var trip = Trip.Create("Test", DateTime.Today, DateTime.Today.AddDays(1), Guid.NewGuid());
 
         // Act
         trip.UpdateStatus("Active");

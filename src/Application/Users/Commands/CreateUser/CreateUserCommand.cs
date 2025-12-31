@@ -41,7 +41,7 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Guid>
         var email = Email.Create(request.Email);
 
         // TODO: アプリケーション層でのパスワードハッシュ化
-        var user = User.Create(Guid.NewGuid(), request.UserName, email, request.Password);
+        var user = User.Create(request.UserName, email, request.Password);
 
         await _userRepository.AddAsync(user, cancellationToken);
 

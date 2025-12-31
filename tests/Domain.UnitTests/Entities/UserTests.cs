@@ -15,10 +15,10 @@ public class UserTests
         var passwordHash = "hashed_password";
 
         // Act
-        var user = User.Create(userId, userName, Email.Create(email), passwordHash);
+        var user = User.Create(userName, Email.Create(email), passwordHash);
 
         // Assert
-        Assert.Equal(userId, user.Id);
+        Assert.Equal(Guid.Empty, user.Id);
         Assert.Equal(userName, user.UserName);
         Assert.Equal(email, user.Email.Value);
         Assert.Equal(passwordHash, user.PasswordHash);
@@ -39,7 +39,7 @@ public class UserTests
         var passwordHash = "hashed_password";
 
         // Act & Assert
-        Assert.Throws<ArgumentException>(() => User.Create(userId, invalidUserName!, Email.Create(email), passwordHash));
+        Assert.Throws<ArgumentException>(() => User.Create(invalidUserName!, Email.Create(email), passwordHash));
     }
 
     [Theory]
@@ -54,6 +54,6 @@ public class UserTests
         var passwordHash = "hashed_password";
 
         // Act & Assert
-        Assert.Throws<ArgumentException>(() => User.Create(userId, userName, Email.Create(invalidEmail!), passwordHash));
+        Assert.Throws<ArgumentException>(() => User.Create(userName, Email.Create(invalidEmail!), passwordHash));
     }
 }
