@@ -16,10 +16,10 @@ public class SettlementTests
         var amount = 2500.00m;
 
         // Act
-        var settlement = Settlement.Create(settlementId, tripId, fromUserId, toUserId, Money.Create(amount));
+        var settlement = Settlement.Create(tripId, fromUserId, toUserId, Money.Create(amount));
 
         // Assert
-        Assert.Equal(settlementId, settlement.Id);
+        Assert.Equal(Guid.Empty, settlement.Id);
         Assert.Equal(tripId, settlement.TripId);
         Assert.Equal(fromUserId, settlement.FromUserId);
         Assert.Equal(toUserId, settlement.ToUserId);
@@ -32,7 +32,7 @@ public class SettlementTests
     public void Complete_ShouldUpdateStatus()
     {
         // Arrange
-        var settlement = Settlement.Create(Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid(), Money.Create(100));
+        var settlement = Settlement.Create(Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid(), Money.Create(100));
         var method = "PayPay";
 
         // Act

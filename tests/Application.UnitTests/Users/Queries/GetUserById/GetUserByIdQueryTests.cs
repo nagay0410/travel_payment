@@ -1,6 +1,7 @@
 using Application.Common.Mappings;
 using Application.Users.Queries.GetUserById;
 using Domain.Entities;
+using Domain.Common;
 using Domain.Interfaces;
 using Domain.ValueObjects;
 using FluentAssertions;
@@ -19,7 +20,7 @@ public class GetUserByIdQueryTests
     public GetUserByIdQueryTests()
     {
         _userRepositoryMock = new Mock<IUserRepository>();
-        
+
         var config = new AutoMapper.MapperConfiguration(cfg => cfg.AddProfile<MappingProfile>());
         _mapper = config.CreateMapper();
     }
@@ -29,7 +30,8 @@ public class GetUserByIdQueryTests
     {
         // Arrange
         var userId = Guid.NewGuid();
-        var user = User.Create(userId, "testuser", Email.Create("test@example.com"), "hash");
+        var user = User.Create("testuser", Email.Create("test@example.com"), "hash");
+        typeof(Entity).GetProperty("Id")!.SetValue(user, userId);
         _userRepositoryMock.Setup(x => x.GetByIdAsync(userId, It.IsAny<CancellationToken>()))
             .ReturnsAsync(user);
 

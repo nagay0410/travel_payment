@@ -18,10 +18,10 @@ public class PaymentTests
         var paymentDate = DateTime.Now;
 
         // Act
-        var payment = Payment.Create(paymentId, tripId, userId, categoryId, Money.Create(amount), description, paymentDate);
+        var payment = Payment.Create(tripId, userId, categoryId, Money.Create(amount), description, paymentDate);
 
         // Assert
-        Assert.Equal(paymentId, payment.Id);
+        Assert.Equal(Guid.Empty, payment.Id);
         Assert.Equal(tripId, payment.TripId);
         Assert.Equal(userId, payment.UserId);
         Assert.Equal(categoryId, payment.CategoryId);
@@ -45,7 +45,7 @@ public class PaymentTests
     public void Create_WithNegativeAmount_ShouldThrowArgumentException()
     {
         // Arrange & Act & Assert
-        Assert.Throws<ArgumentException>(() => 
-            Payment.Create(Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid(), Money.Create(-10), "Bad", DateTime.Now));
+        Assert.Throws<ArgumentException>(() =>
+            Payment.Create(Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid(), Money.Create(-10), "Bad", DateTime.Now));
     }
 }

@@ -1,7 +1,6 @@
 \encoding UTF8
 
 INSERT INTO users (
-    user_id,
     user_name,
     email,
     password_hash,
@@ -10,7 +9,6 @@ INSERT INTO users (
     updated_at
 )
 SELECT
-    gen_random_uuid(),
     'admin',
     'admin@example.com',
     'password',  -- TODO: 本番環境ではハッシュ化されたパスワードを使用すること
@@ -20,3 +18,4 @@ SELECT
 WHERE NOT EXISTS (
     SELECT 1 FROM users WHERE email = 'admin@example.com'
 );
+

@@ -34,7 +34,7 @@ public class TripMember : Entity
     /// </summary>
     public bool IsActive { get; private set; }
 
-    private TripMember(Guid id, Guid tripId, Guid userId, string role) : base(id)
+    private TripMember(Guid tripId, Guid userId, string role) : base()
     {
         TripId = tripId;
         UserId = userId;
@@ -55,12 +55,12 @@ public class TripMember : Entity
     /// <param name="role">ロール</param>
     /// <returns>TripMemberインスタンス</returns>
     /// <exception cref="ArgumentException">不正なロールの場合</exception>
-    public static TripMember Create(Guid id, Guid tripId, Guid userId, string role)
+    public static TripMember Create(Guid tripId, Guid userId, string role)
     {
         if (!AllowedRoles.Contains(role))
             throw new ArgumentException($"不正なロールです。許可されているロール: {string.Join(", ", AllowedRoles)}", nameof(role));
 
-        return new TripMember(id, tripId, userId, role);
+        return new TripMember(tripId, userId, role);
     }
 
     /// <summary>
