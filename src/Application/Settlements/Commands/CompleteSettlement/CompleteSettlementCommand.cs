@@ -15,11 +15,11 @@ namespace Application.Settlements.Commands.CompleteSettlement;
 /// <param name="Currency">通貨</param>
 /// <param name="Method">支払い方法（PayPay等）</param>
 public record CompleteSettlementCommand(
-    Guid TripId, 
-    Guid FromUserId, 
-    Guid ToUserId, 
-    decimal Amount, 
-    string Currency, 
+    Guid TripId,
+    Guid FromUserId,
+    Guid ToUserId,
+    decimal Amount,
+    string Currency,
     string Method) : IRequest;
 
 /// <summary>
@@ -38,10 +38,9 @@ public class CompleteSettlementCommandHandler : IRequestHandler<CompleteSettleme
     {
         var amount = Money.Create(request.Amount, request.Currency);
         var settlement = Settlement.Create(
-            Guid.NewGuid(), 
-            request.TripId, 
-            request.FromUserId, 
-            request.ToUserId, 
+            request.TripId,
+            request.FromUserId,
+            request.ToUserId,
             amount);
 
         settlement.Complete(request.Method);

@@ -2,6 +2,7 @@ using Application.Common.Mappings;
 using Application.Users.Commands.CreateUser;
 using Domain.ValueObjects;
 using Domain.Entities;
+using Domain.Common;
 using Domain.Interfaces;
 using FluentAssertions;
 using Moq;
@@ -27,6 +28,9 @@ public class CreateUserCommandTests
         // Arrange
         var command = new CreateUserCommand("testuser", "test@example.com", "password123");
         var handler = new CreateUserCommandHandler(_userRepositoryMock.Object);
+
+        _userRepositoryMock.Setup(x => x.AddAsync(It.IsAny<User>(), It.IsAny<CancellationToken>()))
+            .Callback<User, CancellationToken>((u, c) => typeof(Entity).GetProperty("Id")!.SetValue(u, Guid.NewGuid()));
 
         // Act
         var result = await handler.Handle(command, CancellationToken.None);

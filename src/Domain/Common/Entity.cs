@@ -21,7 +21,7 @@ public abstract class Entity
     }
 
     /// <summary>
-    /// EF Coreなどのツール用。
+    /// 新規作成用（IDはDBで採番されるため指定しない）。
     /// </summary>
     protected Entity() { }
 

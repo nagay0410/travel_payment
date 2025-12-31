@@ -2,6 +2,7 @@ using Application.Common.Mappings;
 using Application.Payments.Queries.GetPaymentsByTripId;
 using Application.Payments.Queries;
 using Domain.Entities;
+using Domain.Common;
 using Domain.Interfaces;
 using Domain.ValueObjects;
 using FluentAssertions;
@@ -20,7 +21,7 @@ public class GetPaymentsByTripIdTests
     public GetPaymentsByTripIdTests()
     {
         _paymentRepositoryMock = new Mock<IPaymentRepository>();
-        
+
         var config = new AutoMapper.MapperConfiguration(cfg => cfg.AddProfile<MappingProfile>());
         _mapper = config.CreateMapper();
     }
@@ -30,10 +31,9 @@ public class GetPaymentsByTripIdTests
     {
         // Arrange
         var tripId = Guid.NewGuid();
-        var payments = new List<Payment>
-        {
-            Payment.Create(Guid.NewGuid(), tripId, Guid.NewGuid(), Guid.Empty, Money.Create(1000), "Dinner", DateTime.Now)
-        };
+        var p = Payment.Create(tripId, Guid.NewGuid(), Guid.Empty, Money.Create(1000), "Dinner", DateTime.Now);
+        typeof(Entity).GetProperty("Id")!.SetValue(p, Guid.NewGuid());
+        var payments = new List<Payment> { p };
         _paymentRepositoryMock.Setup(x => x.GetByTripIdAsync(tripId, It.IsAny<CancellationToken>()))
             .ReturnsAsync(payments);
 

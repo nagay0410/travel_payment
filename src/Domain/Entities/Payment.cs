@@ -60,7 +60,7 @@ public class Payment : Entity
     /// </summary>
     public IReadOnlyCollection<PaymentParticipant> Participants => _participants.AsReadOnly();
 
-    private Payment(Guid id, Guid tripId, Guid userId, Guid categoryId, Money amount, string? description, DateTime paymentDate, string? receiptImage) : base(id)
+    private Payment(Guid tripId, Guid userId, Guid categoryId, Money amount, string? description, DateTime paymentDate, string? receiptImage) : base()
     {
         TripId = tripId;
         UserId = userId;
@@ -79,9 +79,9 @@ public class Payment : Entity
     /// <summary>
     /// 新しい支払い記録を作成します。
     /// </summary>
-    public static Payment Create(Guid id, Guid tripId, Guid userId, Guid categoryId, Money amount, string? description, DateTime paymentDate, string? receiptImage = null)
+    public static Payment Create(Guid tripId, Guid userId, Guid categoryId, Money amount, string? description, DateTime paymentDate, string? receiptImage = null)
     {
-        return new Payment(id, tripId, userId, categoryId, amount, description, paymentDate, receiptImage);
+        return new Payment(tripId, userId, categoryId, amount, description, paymentDate, receiptImage);
     }
 
     /// <summary>
@@ -93,7 +93,7 @@ public class Payment : Entity
         if (_participants.Any(p => p.UserId == userId))
             return;
 
-        _participants.Add(PaymentParticipant.Create(Guid.NewGuid(), Id, userId));
+        _participants.Add(PaymentParticipant.Create(Id, userId));
         UpdatedAt = DateTimeOffset.UtcNow;
     }
 }
