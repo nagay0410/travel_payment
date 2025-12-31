@@ -1,4 +1,4 @@
-using Application.Common.Mappings;
+using Application.Common.Interfaces;
 using Application.Users.Commands.CreateUser;
 using Domain.ValueObjects;
 using Domain.Entities;
@@ -10,16 +10,17 @@ using Moq;
 namespace Application.UnitTests.Users.Commands.CreateUser;
 
 /// <summary>
-/// ユーザー登録機能の単体テスト（TDD: Red段階）。
-/// まだ実装（CreateUserCommand / Handler）が存在しないためビルドエラーになります。
+/// ユーザー登録機能の単体テスト。
 /// </summary>
 public class CreateUserCommandTests
 {
     private readonly Mock<IUserRepository> _userRepositoryMock;
+    private readonly Mock<IPasswordHasher> _passwordHasherMock;
 
     public CreateUserCommandTests()
     {
         _userRepositoryMock = new Mock<IUserRepository>();
+        _passwordHasherMock = new Mock<IPasswordHasher>();
     }
 
     [Fact]
@@ -27,7 +28,16 @@ public class CreateUserCommandTests
     {
         // Arrange
         var command = new CreateUserCommand("testuser", "test@example.com", "password123");
-        var handler = new CreateUserCommandHandler(_userRepositoryMock.Object);
+        var hashedPassword = "hashed_password_123";
+
+        _passwordHasherMock
+            .Setup(x => x.HashPassword(command.Password))
+            .Returns(hashedPassword);
+
+        var handler = new CreateUserCommandHandler(_userRepositoryMock.Object, _passwordHasherMock.Object);
+
+        _userRepositoryMock.Setup(x => x.AddAsync(It.IsAny<User>(), It.IsAny<CancellationToken>()))
+            .Callback<User, CancellationToken>((u, c) => typeof(Entity).GetProperty("Id")!.SetValue(u, Guid.NewGuid()));
 
         _userRepositoryMock.Setup(x => x.AddAsync(It.IsAny<User>(), It.IsAny<CancellationToken>()))
             .Callback<User, CancellationToken>((u, c) => typeof(Entity).GetProperty("Id")!.SetValue(u, Guid.NewGuid()));
@@ -37,6 +47,10 @@ public class CreateUserCommandTests
 
         // Assert
         result.Should().NotBeEmpty();
-        _userRepositoryMock.Verify(x => x.AddAsync(It.IsAny<User>(), It.IsAny<CancellationToken>()), Times.Once);
+        _passwordHasherMock.Verify(x => x.HashPassword(command.Password), Times.Once);
+        _userRepositoryMock.Verify(x => x.AddAsync(
+            It.Is<User>(u => u.PasswordHash == hashedPassword),
+            It.IsAny<CancellationToken>()), Times.Once);
     }
 }
+
