@@ -8,6 +8,8 @@
             "args": [
                 "build",
                 "${workspaceFolder}/TravelPayment.sln",
+                "--configuration",
+                "Debug",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary;ForceNoAlign"
             ],

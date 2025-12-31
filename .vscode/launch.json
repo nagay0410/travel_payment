@@ -2,18 +2,16 @@
 	"version": "0.2.0",
 	"configurations": [
 		{
-			"name": "API (dotnet run)",
+			"name": "API (Launch DLL)",
 			"type": "coreclr",
 			"request": "launch",
-			"program": "dotnet",
+			"preLaunchTask": "build",
+			"program": "${workspaceFolder}/src/API/bin/Debug/net8.0/API.dll",
 			"args": [
-				"run",
-				"--project",
-				"src/API/API.csproj",
 				"--urls",
 				"http://0.0.0.0:5000"
 			],
-			"cwd": "${workspaceFolder}",
+			"cwd": "${workspaceFolder}/src/API",
 			"console": "integratedTerminal",
 			"stopAtEntry": false,
 			"env": {
@@ -46,7 +44,7 @@
 		{
 			"name": "Full Stack",
 			"configurations": [
-				"API (dotnet run)",
+				"API (Launch DLL)",
 				"Client (Angular)"
 			],
 			"stopAll": true

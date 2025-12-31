@@ -1,5 +1,6 @@
 using Domain.Entities;
 using Domain.Interfaces;
+using Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Persistence.Repositories;
@@ -23,8 +24,9 @@ public class UserRepository : IUserRepository
 
     public async Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default)
     {
-        // ValueConverter が適用されているため、文字列で検索可能
-        return await _context.Users.FirstOrDefaultAsync(u => u.Email.Value == email, cancellationToken);
+        // ValueConverterが適用されているため、Email値オブジェクトを直接比較できる
+        var emailValueObject = Email.Create(email);
+        return await _context.Users.FirstOrDefaultAsync(u => u.Email == emailValueObject, cancellationToken);
     }
 
     public async Task AddAsync(User user, CancellationToken cancellationToken = default)
