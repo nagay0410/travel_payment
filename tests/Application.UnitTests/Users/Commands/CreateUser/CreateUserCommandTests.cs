@@ -39,6 +39,9 @@ public class CreateUserCommandTests
         _userRepositoryMock.Setup(x => x.AddAsync(It.IsAny<User>(), It.IsAny<CancellationToken>()))
             .Callback<User, CancellationToken>((u, c) => typeof(Entity).GetProperty("Id")!.SetValue(u, Guid.NewGuid()));
 
+        _userRepositoryMock.Setup(x => x.AddAsync(It.IsAny<User>(), It.IsAny<CancellationToken>()))
+            .Callback<User, CancellationToken>((u, c) => typeof(Entity).GetProperty("Id")!.SetValue(u, Guid.NewGuid()));
+
         // Act
         var result = await handler.Handle(command, CancellationToken.None);
 

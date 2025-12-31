@@ -15,7 +15,7 @@
 ### バックエンド
 - **フレームワーク**: ASP.NET Core 8.0
 - **ORM**: Entity Framework Core 8.0
-- **データベース**: PostgreSQL (推奨) / SQL Server
+- **データベース**: PostgreSQL 18
 - **アーキテクチャ**: クリーンアーキテクチャ
 
 ### フロントエンド
@@ -60,7 +60,7 @@ TravelPayment/
 
 ### 前提条件
 - .NET 8.0 SDK
-- PostgreSQL
+- PostgreSQL 18
 - Node.js 20+
 
 ### バックエンドの起動
