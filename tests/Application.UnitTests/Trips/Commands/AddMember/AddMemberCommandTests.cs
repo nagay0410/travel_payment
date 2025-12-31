@@ -1,5 +1,6 @@
 using Application.Trips.Commands.AddMember;
 using Domain.Entities;
+using Domain.Common;
 using Domain.Interfaces;
 using FluentAssertions;
 using Moq;
@@ -26,8 +27,11 @@ public class AddMemberCommandTests
         // Arrange
         var tripId = Guid.NewGuid();
         var userId = Guid.NewGuid();
-        var trip = Trip.Create(tripId, "test trip", DateTime.Today, DateTime.Today.AddDays(1), Guid.NewGuid());
-        var user = User.Create(userId, "new member", Domain.ValueObjects.Email.Create("member@example.com"), "hash");
+        var trip = Trip.Create("test trip", DateTime.Today, DateTime.Today.AddDays(1), Guid.NewGuid());
+        typeof(Entity).GetProperty("Id")!.SetValue(trip, tripId);
+
+        var user = User.Create("new member", Domain.ValueObjects.Email.Create("member@example.com"), "hash");
+        typeof(Entity).GetProperty("Id")!.SetValue(user, userId);
 
         _tripRepositoryMock.Setup(x => x.GetByIdAsync(tripId, It.IsAny<CancellationToken>()))
             .ReturnsAsync(trip);

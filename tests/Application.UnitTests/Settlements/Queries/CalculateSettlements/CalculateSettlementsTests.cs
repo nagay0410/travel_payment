@@ -1,6 +1,7 @@
 using Application.Common.Mappings;
 using Application.Settlements.Queries.CalculateSettlements;
 using Domain.Entities;
+using Domain.Common;
 using Domain.Interfaces;
 using Domain.ValueObjects;
 using FluentAssertions;
@@ -31,15 +32,18 @@ public class CalculateSettlementsTests
         var userB = Guid.NewGuid();
         var userC = Guid.NewGuid();
 
-        var trip = Trip.Create(tripId, "test trip", DateTime.Today, DateTime.Today.AddDays(1), userA);
-        trip.AddMember(TripMember.Create(Guid.NewGuid(), tripId, userA, "Admin"));
-        trip.AddMember(TripMember.Create(Guid.NewGuid(), tripId, userB, "Member"));
-        trip.AddMember(TripMember.Create(Guid.NewGuid(), tripId, userC, "Member"));
+        var trip = Trip.Create("test trip", DateTime.Today, DateTime.Today.AddDays(1), userA);
+        typeof(Entity).GetProperty("Id")!.SetValue(trip, tripId);
+
+        trip.AddMember(TripMember.Create(tripId, userA, "Admin"));
+        trip.AddMember(TripMember.Create(tripId, userB, "Member"));
+        trip.AddMember(TripMember.Create(tripId, userC, "Member"));
 
         _tripRepositoryMock.Setup(x => x.GetByIdAsync(tripId, It.IsAny<CancellationToken>()))
             .ReturnsAsync(trip);
 
-        var payment = Payment.Create(Guid.NewGuid(), tripId, userA, Guid.Empty, Money.Create(3000), "Dinner", DateTime.Now);
+        var payment = Payment.Create(tripId, userA, Guid.Empty, Money.Create(3000), "Dinner", DateTime.Now);
+        typeof(Entity).GetProperty("Id")!.SetValue(payment, Guid.NewGuid());
         payment.AddParticipant(userA);
         payment.AddParticipant(userB);
         payment.AddParticipant(userC);

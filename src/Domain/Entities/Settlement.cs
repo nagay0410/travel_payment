@@ -48,7 +48,7 @@ public class Settlement : Entity
     /// </summary>
     public DateTimeOffset CreatedAt { get; private set; }
 
-    private Settlement(Guid id, Guid tripId, Guid fromUserId, Guid toUserId, Money amount) : base(id)
+    private Settlement(Guid tripId, Guid fromUserId, Guid toUserId, Money amount) : base()
     {
         TripId = tripId;
         FromUserId = fromUserId;
@@ -64,15 +64,14 @@ public class Settlement : Entity
     /// <summary>
     /// 新しい精算データをレコード作成します。
     /// </summary>
-    /// <param name="id">精算ID</param>
     /// <param name="tripId">旅行ID</param>
     /// <param name="fromUserId">支払者ユーザーID</param>
     /// <param name="toUserId">受取者ユーザーID</param>
     /// <param name="amount">精算金額</param>
     /// <returns>Settlementインスタンス</returns>
-    public static Settlement Create(Guid id, Guid tripId, Guid fromUserId, Guid toUserId, Money amount)
+    public static Settlement Create(Guid tripId, Guid fromUserId, Guid toUserId, Money amount)
     {
-        return new Settlement(id, tripId, fromUserId, toUserId, amount);
+        return new Settlement(tripId, fromUserId, toUserId, amount);
     }
 
     /// <summary>

@@ -18,7 +18,8 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
 
         builder.Property(u => u.Id)
             .HasColumnName("user_id")
-            .ValueGeneratedNever();
+            .ValueGeneratedOnAdd()
+            .HasDefaultValueSql("uuid_generate_v4()");
 
         builder.Property(u => u.UserName)
             .HasColumnName("user_name")
@@ -62,7 +63,8 @@ public class TripConfiguration : IEntityTypeConfiguration<Trip>
 
         builder.Property(t => t.Id)
             .HasColumnName("trip_id")
-            .ValueGeneratedNever();
+            .ValueGeneratedOnAdd()
+            .HasDefaultValueSql("uuid_generate_v4()");
 
         builder.Property(t => t.TripName)
             .HasColumnName("trip_name")
@@ -96,7 +98,8 @@ public class PaymentConfiguration : IEntityTypeConfiguration<Payment>
 
         builder.Property(p => p.Id)
             .HasColumnName("payment_id")
-            .ValueGeneratedNever();
+            .ValueGeneratedOnAdd()
+            .HasDefaultValueSql("uuid_generate_v4()");
 
         builder.OwnsOne(p => p.Amount, a =>
         {
@@ -121,7 +124,8 @@ public class PaymentParticipantConfiguration : IEntityTypeConfiguration<PaymentP
 
         builder.Property(x => x.Id)
             .HasColumnName("payment_participant_id")
-            .ValueGeneratedNever();
+            .ValueGeneratedOnAdd()
+            .HasDefaultValueSql("uuid_generate_v4()");
 
         builder.Property(x => x.PaymentId)
             .HasColumnName("payment_id")
@@ -139,7 +143,10 @@ public class TripMemberConfiguration : IEntityTypeConfiguration<TripMember>
     {
         builder.ToTable("trip_members");
         builder.HasKey(x => x.Id);
-        builder.Property(x => x.Id).HasColumnName("trip_member_id").ValueGeneratedNever();
+        builder.Property(x => x.Id)
+            .HasColumnName("trip_member_id")
+            .ValueGeneratedOnAdd()
+            .HasDefaultValueSql("uuid_generate_v4()");
         builder.Property(x => x.TripId).HasColumnName("trip_id").IsRequired();
         builder.Property(x => x.UserId).HasColumnName("user_id").IsRequired();
         builder.Property(x => x.Role).HasColumnName("role").IsRequired();
@@ -154,7 +161,10 @@ public class CategoryConfiguration : IEntityTypeConfiguration<Category>
     {
         builder.ToTable("categories");
         builder.HasKey(x => x.Id);
-        builder.Property(x => x.Id).HasColumnName("category_id").ValueGeneratedNever();
+        builder.Property(x => x.Id)
+            .HasColumnName("category_id")
+            .ValueGeneratedOnAdd()
+            .HasDefaultValueSql("uuid_generate_v4()");
         builder.Property(x => x.CategoryName).HasColumnName("category_name").HasMaxLength(50).IsRequired();
         builder.Property(x => x.Description).HasColumnName("description").HasMaxLength(200);
         builder.Property(x => x.Icon).HasColumnName("icon").HasMaxLength(50);
@@ -167,7 +177,10 @@ public class SettlementConfiguration : IEntityTypeConfiguration<Settlement>
     {
         builder.ToTable("settlements");
         builder.HasKey(x => x.Id);
-        builder.Property(x => x.Id).HasColumnName("settlement_id").ValueGeneratedNever();
+        builder.Property(x => x.Id)
+            .HasColumnName("settlement_id")
+            .ValueGeneratedOnAdd()
+            .HasDefaultValueSql("uuid_generate_v4()");
         builder.Property(x => x.TripId).HasColumnName("trip_id").IsRequired();
         builder.Property(x => x.FromUserId).HasColumnName("from_user_id").IsRequired();
         builder.Property(x => x.ToUserId).HasColumnName("to_user_id").IsRequired();

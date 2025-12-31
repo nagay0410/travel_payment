@@ -58,7 +58,6 @@ public class CreateTripCommandHandler : IRequestHandler<CreateTripCommand, Guid>
 
         var budget = Money.Create(request.BudgetAmount, request.Currency);
         var trip = Trip.Create(
-            Guid.NewGuid(),
             request.Title,
             request.StartDate,
             request.EndDate,
@@ -67,7 +66,7 @@ public class CreateTripCommandHandler : IRequestHandler<CreateTripCommand, Guid>
             budget);
 
         // 作成者をメンバーとして追加（Adminロールを使用）
-        var ownerMember = TripMember.Create(Guid.NewGuid(), trip.Id, owner.Id, "Admin");
+        var ownerMember = TripMember.Create(trip.Id, owner.Id, "Admin");
         trip.AddMember(ownerMember);
 
         await _tripRepository.AddAsync(trip, cancellationToken);

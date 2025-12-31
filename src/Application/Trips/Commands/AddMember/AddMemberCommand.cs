@@ -52,7 +52,7 @@ public class AddMemberCommandHandler : IRequestHandler<AddMemberCommand>
             throw new Exception($"User with email {request.Email} not found.");
         }
 
-        var member = TripMember.Create(Guid.NewGuid(), trip.Id, user.Id, request.Role);
+        var member = TripMember.Create(trip.Id, user.Id, request.Role);
         trip.AddMember(member);
 
         await _tripRepository.UpdateAsync(trip, cancellationToken);

@@ -1,5 +1,6 @@
 using Application.Trips.Commands.CreateTrip;
 using Domain.Entities;
+using Domain.Common;
 using Domain.Interfaces;
 using Domain.ValueObjects;
 using FluentAssertions;
@@ -26,7 +27,9 @@ public class CreateTripCommandTests
     {
         // Arrange
         var userId = Guid.NewGuid();
-        var user = User.Create(userId, "testuser", Email.Create("test@example.com"), "hash");
+        var user = User.Create("testuser", Email.Create("test@example.com"), "hash");
+        typeof(Entity).GetProperty("Id")!.SetValue(user, userId);
+
         _userRepositoryMock.Setup(x => x.GetByIdAsync(userId, It.IsAny<CancellationToken>()))
             .ReturnsAsync(user);
 
@@ -34,6 +37,9 @@ public class CreateTripCommandTests
         var endDate = DateTime.Today.AddDays(3);
         var command = new CreateTripCommand("test trip", userId, startDate, endDate, 100000, "JPY");
         var handler = new CreateTripCommandHandler(_tripRepositoryMock.Object, _userRepositoryMock.Object);
+
+        _tripRepositoryMock.Setup(x => x.AddAsync(It.IsAny<Trip>(), It.IsAny<CancellationToken>()))
+            .Callback<Trip, CancellationToken>((t, c) => typeof(Entity).GetProperty("Id")!.SetValue(t, Guid.NewGuid()));
 
         // Act
         var result = await handler.Handle(command, CancellationToken.None);

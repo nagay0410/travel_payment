@@ -14,10 +14,10 @@ public class TripMemberTests
         var role = "Admin";
 
         // Act
-        var member = TripMember.Create(tripMemberId, tripId, userId, role);
+        var member = TripMember.Create(tripId, userId, role);
 
         // Assert
-        Assert.Equal(tripMemberId, member.Id);
+        Assert.Equal(Guid.Empty, member.Id);
         Assert.Equal(tripId, member.TripId);
         Assert.Equal(userId, member.UserId);
         Assert.Equal(role, member.Role);
@@ -30,7 +30,7 @@ public class TripMemberTests
     public void Create_WithInvalidRole_ShouldThrowArgumentException(string role)
     {
         // Arrange & Act & Assert
-        Assert.Throws<ArgumentException>(() => 
-            TripMember.Create(Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid(), role));
+        Assert.Throws<ArgumentException>(() =>
+            TripMember.Create(Guid.NewGuid(), Guid.NewGuid(), role));
     }
 }

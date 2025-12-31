@@ -2,6 +2,7 @@ using Application.Common.Mappings;
 using Application.Trips.Queries.GetTripById;
 using Application.Trips.Queries;
 using Domain.Entities;
+using Domain.Common;
 using Domain.Interfaces;
 using Domain.ValueObjects;
 using FluentAssertions;
@@ -20,7 +21,7 @@ public class GetTripByIdQueryTests
     public GetTripByIdQueryTests()
     {
         _tripRepositoryMock = new Mock<ITripRepository>();
-        
+
         var config = new AutoMapper.MapperConfiguration(cfg => cfg.AddProfile<MappingProfile>());
         _mapper = config.CreateMapper();
     }
@@ -30,7 +31,9 @@ public class GetTripByIdQueryTests
     {
         // Arrange
         var tripId = Guid.NewGuid();
-        var trip = Trip.Create(tripId, "test trip", DateTime.Today, DateTime.Today.AddDays(1), Guid.NewGuid());
+        var trip = Trip.Create("test trip", DateTime.Today, DateTime.Today.AddDays(1), Guid.NewGuid());
+        typeof(Entity).GetProperty("Id")!.SetValue(trip, tripId);
+
         _tripRepositoryMock.Setup(x => x.GetByIdAsync(tripId, It.IsAny<CancellationToken>()))
             .ReturnsAsync(trip);
 

@@ -22,7 +22,7 @@ public class Category : Entity
     /// </summary>
     public string? Icon { get; private set; }
 
-    private Category(Guid id, string categoryName, string? description, string? icon) : base(id)
+    private Category(string categoryName, string? description, string? icon) : base()
     {
         CategoryName = categoryName;
         Description = description;
@@ -40,11 +40,11 @@ public class Category : Entity
     /// <param name="description">説明（任意）</param>
     /// <param name="icon">アイコン（任意）</param>
     /// <returns>Categoryインスタンス</returns>
-    public static Category Create(Guid id, string categoryName, string? description = null, string? icon = null)
+    public static Category Create(string categoryName, string? description = null, string? icon = null)
     {
         if (string.IsNullOrWhiteSpace(categoryName))
             throw new ArgumentException("カテゴリ名は必須です。", nameof(categoryName));
 
-        return new Category(id, categoryName, description, icon);
+        return new Category(categoryName, description, icon);
     }
 }
