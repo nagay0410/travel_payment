@@ -6,11 +6,12 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { AuthService } from '../../services/auth.service';
+import { MatDivider } from "@angular/material/divider";
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [CommonModule, RouterModule, MatToolbarModule, MatButtonModule, MatIconModule, MatMenuModule],
+  imports: [CommonModule, RouterModule, MatToolbarModule, MatButtonModule, MatIconModule, MatMenuModule, MatDivider],
   template: `
     <mat-toolbar color="primary" class="navbar">
       <span class="logo" routerLink="/">Travel Settlement</span>
@@ -22,9 +23,10 @@ import { AuthService } from '../../services/auth.service';
           <mat-icon>account_circle</mat-icon>
         </button>
         <mat-menu #menu="matMenu">
-          <div class="user-info" mat-menu-item disabled>
-            {{ authService.currentUser()?.username }}
+          <div class="user-info">
+            ユーザー: {{ authService.currentUser()?.username }}
           </div>
+          <mat-divider></mat-divider>
           <button mat-menu-item (click)="onLogout()">
             <mat-icon>logout</mat-icon>
             <span>ログアウト</span>
@@ -48,7 +50,16 @@ import { AuthService } from '../../services/auth.service';
     }
     .spacer { flex: 1 1 auto; }
     .logo { cursor: pointer; font-weight: bold; }
-    .user-info { font-size: 12px; color: #666; }
+    .user-info { 
+        /* mat-menu-itemのcss設定に合わせる */
+        padding: 0px 16px;
+        min-height: 48px;
+        display: flex;
+        align-items: center;
+        font-size: 14px; 
+        color: #666;
+        pointer-events: none;
+    }
   `]
 })
 export class NavbarComponent {
