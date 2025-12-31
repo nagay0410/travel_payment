@@ -1,6 +1,7 @@
 import { Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, tap, catchError, of } from 'rxjs';
+import { ApiResponse } from '../models/api-response.model';
 
 /**
  * ユーザー情報（詳細設計・シーケンス図準拠）
@@ -12,14 +13,13 @@ export interface User {
 }
 
 /**
- * ログインレスポンス
+ * バックエンドの認証結果レスポンス構造
  */
-export interface AuthResponse {
-  success: boolean;
-  data: {
-    user: User;
-    accessToken: string;
-  };
+export interface AuthenticationResult {
+  userId: string;
+  userName: string;
+  email: string;
+  token: string;
 }
 
 @Injectable({
@@ -56,14 +56,18 @@ export class AuthService {
   /**
    * ログイン処理（シーケンス図準拠）
    */
-  login(email: string, password: string): Observable<AuthResponse> {
-    // 暫定的に /api/auth/login を想定
-    return this.http.post<AuthResponse>('/api/auth/login', { email, password }).pipe(
+  login(email: string, password: string): Observable<ApiResponse<AuthenticationResult>> {
+    return this.http.post<ApiResponse<AuthenticationResult>>('/api/auth/login', { email, password }).pipe(
       tap(res => {
-        if (res.success) {
-          localStorage.setItem(this.TOKEN_KEY, res.data.accessToken);
-          localStorage.setItem(this.USER_KEY, JSON.stringify(res.data.user));
-          this.currentUser.set(res.data.user);
+        if (res.success && res.data) {
+          localStorage.setItem(this.TOKEN_KEY, res.data.token);
+          const user: User = {
+            id: res.data.userId,
+            username: res.data.userName,
+            email: res.data.email
+          };
+          localStorage.setItem(this.USER_KEY, JSON.stringify(user));
+          this.currentUser.set(user);
           this.isAuthenticated.set(true);
         }
       })
