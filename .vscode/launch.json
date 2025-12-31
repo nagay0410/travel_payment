@@ -24,6 +24,32 @@
 			"name": "Attach to .NET Core",
 			"type": "coreclr",
 			"request": "attach"
+		},
+		{
+			"name": "Client (Angular)",
+			"type": "msedge",
+			"request": "launch",
+			"preLaunchTask": "serve-web",
+			"url": "http://localhost:4200",
+			"webRoot": "${workspaceFolder}/src/Web",
+			"sourceMaps": true,
+			"sourceMapPathOverrides": {
+				"webpack:/*": "${webRoot}/*",
+				"/./*": "${webRoot}/*",
+				"/src/*": "${webRoot}/*",
+				"/*": "*",
+				"/./~/*": "${webRoot}/node_modules/*"
+			}
+		}
+	],
+	"compounds": [
+		{
+			"name": "Full Stack",
+			"configurations": [
+				"API (dotnet run)",
+				"Client (Angular)"
+			],
+			"stopAll": true
 		}
 	]
 }

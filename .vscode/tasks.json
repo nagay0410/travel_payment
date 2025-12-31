@@ -36,6 +36,29 @@
                 "${workspaceFolder}/TravelPayment.sln"
             ],
             "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "serve-web",
+            "type": "shell",
+            "command": "npm",
+            "args": [
+                "start"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}/src/Web"
+            },
+            "isBackground": true,
+            "problemMatcher": {
+                "owner": "custom",
+                "pattern": {
+                    "regexp": "^$"
+                },
+                "background": {
+                    "activeOnStart": true,
+                    "beginsPattern": ".*",
+                    "endsPattern": "(Compiled successfully|Application bundle generation complete)"
+                }
+            }
         }
     ]
 }
