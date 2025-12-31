@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -16,7 +16,7 @@ import { AuthService } from '../../services/auth.service';
       <span class="logo" routerLink="/">Travel Settlement</span>
       <span class="spacer"></span>
       
-      <ng-container *ngIf="authService.isAuthenticated(); else loginBtn">
+      <ng-container *ngIf="authService.isAuthenticated();">
         <button mat-button routerLink="/trips">旅行一覧</button>
         <button mat-icon-button [matMenuTriggerFor]="menu">
           <mat-icon>account_circle</mat-icon>
@@ -52,9 +52,13 @@ import { AuthService } from '../../services/auth.service';
   `]
 })
 export class NavbarComponent {
-  constructor(public authService: AuthService) {}
+  constructor(
+    public authService: AuthService,
+    private router: Router
+  ) {}
 
   onLogout(): void {
     this.authService.logout();
+    this.router.navigate(['/login']);
   }
 }
