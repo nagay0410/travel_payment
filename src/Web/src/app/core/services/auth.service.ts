@@ -44,7 +44,10 @@ export class AuthService {
     const token = localStorage.getItem(this.TOKEN_KEY);
     const userJson = localStorage.getItem(this.USER_KEY);
     
-    if (token && userJson) {
+    if ((token && userJson) &&
+        (token !== 'undefined') &&
+        (userJson !== 'undefined')
+    ) {
       this.currentUser.set(JSON.parse(userJson));
       this.isAuthenticated.set(true);
     }

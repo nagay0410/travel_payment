@@ -63,12 +63,10 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, AuthenticationR
         }
 
         // パスワードを検証
-        // TODO: ユーザー登録機能がまだのため、ハッシュ化したパスワードでユーザーを登録することができない。
-        // そのため、現時点ではパスワード検証をコメントアウトしています。
-        // if (!_passwordHasher.VerifyPassword(request.Password, user.PasswordHash))
-        // {
-        //     throw new UnauthorizedAccessException("メールアドレスまたはパスワードが正しくありません。");
-        // }
+        if (!_passwordHasher.VerifyPassword(request.Password, user.PasswordHash))
+        {
+            throw new UnauthorizedAccessException("メールアドレスまたはパスワードが正しくありません。");
+        }
 
         // 最終ログイン日時を更新
         user.UpdateLastLogin();
