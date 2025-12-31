@@ -68,6 +68,13 @@ export class AuthService {
   }
 
   /**
+   * ユーザー登録処理
+   */
+  register(user: { username: string; email: string; password: string }): Observable<void> {
+    return this.http.post<void>('/api/users', user);
+  }
+
+  /**
    * ログアウト
    */
   logout(): void {

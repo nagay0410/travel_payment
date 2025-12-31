@@ -101,9 +101,9 @@ export class RegisterComponent {
 
   constructor(
     private fb: FormBuilder,
-    private authService: AuthService,
     private router: Router,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private authService: AuthService
   ) {
     this.registerForm = this.fb.group({
       username: ['', [Validators.required]],
@@ -124,7 +124,17 @@ export class RegisterComponent {
 
   onSubmit(): void {
     if (this.registerForm.valid) {
-      this.snackBar.open('ユーザー登録機能は現在準備中です', '閉じる', { duration: 3000 });
+      const { username, email, password } = this.registerForm.value;
+      this.authService.register({ username, email, password }).subscribe({
+        next: () => {
+          this.snackBar.open('ユーザー登録が完了しました。ログインしてください。', '閉じる', { duration: 3000 });
+          this.router.navigate(['/login']);
+        },
+        error: (err) => {
+          console.error(err);
+          this.snackBar.open('登録に失敗しました。もう一度お試しください。', '閉じる', { duration: 3000 });
+        }
+      });
     }
   }
 }
